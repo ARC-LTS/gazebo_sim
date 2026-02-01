@@ -35,7 +35,7 @@ ARGUMENTS = [
                           choices=['true', 'false'],
                           description='use_sim_time'),
     DeclareLaunchArgument('generate',
-                      default_value='true',
+                      default_value='false',
                       choices=['true', 'false'],
                       description='Generate parameters and launch files'),
 ]
