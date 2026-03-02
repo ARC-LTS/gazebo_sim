@@ -46,7 +46,7 @@ ARGUMENTS = [
     DeclareLaunchArgument('use_sim_time', default_value='true',
                           choices=['true', 'false'],
                           description='use_sim_time'),
-    DeclareLaunchArgument('world', default_value='warehouse',
+    DeclareLaunchArgument('world', default_value='warehouse_barricaded',
                           description='Gazebo World'),
     DeclareLaunchArgument('setup_path',
                           default_value=[EnvironmentVariable('HOME'), '/clearpath/'],
