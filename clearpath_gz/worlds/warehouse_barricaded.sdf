@@ -1,4 +1,5 @@
-<sdf version='1.9'>
+<?xml version='1.0' encoding='ASCII'?>
+<sdf version='1.7'>
   <world name='warehouse'>
     <physics type='ode'>
       <max_step_size>0.0030000000000000001</max_step_size>
@@ -190,11 +191,6 @@
       <uri>https://fuel.gazebosim.org/1.0/plateau/models/Casual female</uri>
       <name>Person 2 - Walking</name>
       <pose>-12 15 0 0 -0 0</pose>
-    </include>
-    <include>
-      <uri>file://<urdf-string></uri>
-      <name>robot</name>
-      <pose>-1.24087 3.46713 0.13228 -0 0 -2.95184</pose>
     </include>
     <include>
       <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>

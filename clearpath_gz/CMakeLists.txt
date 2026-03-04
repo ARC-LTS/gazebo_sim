@@ -7,10 +7,27 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+
+add_executable(battery_simulator src/battery_simulator.cpp)
+ament_target_dependencies(battery_simulator
+  rclcpp
+  sensor_msgs
+  nav_msgs
+  std_msgs
+)
 
 install(
   DIRECTORY config launch worlds
   DESTINATION share/${PROJECT_NAME}
+)
+
+install(TARGETS
+  battery_simulator
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)

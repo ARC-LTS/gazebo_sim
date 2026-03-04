@@ -26,7 +26,7 @@ from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJ
 ARGUMENTS = [
     DeclareLaunchArgument('rviz', default_value='false',
                           choices=['true', 'false'], description='Start rviz.'),
-    DeclareLaunchArgument('world', default_value='warehouse',
+    DeclareLaunchArgument('world', default_value='warehouse_barricaded',
                           description='Gazebo World'),
     DeclareLaunchArgument('setup_path',
                           default_value=[EnvironmentVariable('HOME'), '/clearpath/'],
@@ -58,6 +58,8 @@ def generate_launch_description():
         [pkg_clearpath_gz, 'launch', 'gz_sim.launch.py'])
     robot_spawn_launch = PathJoinSubstitution(
         [pkg_clearpath_gz, 'launch', 'robot_spawn.launch.py'])
+    battery_launch = PathJoinSubstitution(
+        [pkg_clearpath_gz, 'launch', 'battery_launch.py'])
 
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([gz_sim_launch]),
@@ -80,8 +82,21 @@ def generate_launch_description():
             ('generate', LaunchConfiguration('generate'))]
     )
 
+    battery = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([battery_launch]),
+        launch_arguments=[
+            ('initial_percentage', '1.0'),
+            ('nominal_voltage', '24.0'),
+            ('capacity_ah', '20.0'),
+            ('idle_current_amps', '1.25'),
+            ('discharge_rate_per_meter', '0.0001'),
+            ('odom_topic', '/odometry'),
+            ('battery_topic', '/battery_state')]
+    )
+
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(gz_sim)
     ld.add_action(robot_spawn)
+    ld.add_action(battery)
     return ld
