@@ -1,0 +1,205 @@
+<sdf version='1.9'>
+  <world name='warehouse'>
+    <physics type='ode'>
+      <max_step_size>0.0030000000000000001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <plugin name='ignition::gazebo::systems::Physics' filename='libignition-gazebo-physics-system.so'/>
+    <plugin name='ignition::gazebo::systems::UserCommands' filename='libignition-gazebo-user-commands-system.so'/>
+    <plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='libignition-gazebo-scene-broadcaster-system.so'/>
+    <plugin name='ignition::gazebo::systems::Sensors' filename='libignition-gazebo-sensors-system.so'>
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin name='ignition::gazebo::systems::Imu' filename='libignition-gazebo-imu-system.so'/>
+    <plugin name='ignition::gazebo::systems::NavSat' filename='libignition-gazebo-navsat-system.so'/>
+    <scene>
+      <ambient>1 1 1 1</ambient>
+      <background>0.3 0.7 0.9 1</background>
+      <shadows>false</shadows>
+      <grid>false</grid>
+    </scene>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>-22.986687</latitude_deg>
+      <longitude_deg>-43.202500999999998</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <model name='ground_plane'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>1 1</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <pose>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <pose>0 0 0 0 -0 0</pose>
+      <self_collide>false</self_collide>
+    </model>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_0</name>
+      <pose>-5.07086 0.503968 0 0 -0 1.57</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_1</name>
+      <pose>-10.4 10.5 0 0 -0 1.57</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2</name>
+      <pose>-10.4 6.5 0 0 -0 1.57</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_3</name>
+      <pose>-12.85 4.85 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/foldable_chair</uri>
+      <name>fchair_0</name>
+      <pose>-11.5 6.4 0 0 0 -1.8</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/foldable_chair</uri>
+      <name>fchair1</name>
+      <pose>-14 6.5 0 0 -0 1.9</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Table</uri>
+      <name>table0</name>
+      <pose>-12.7 6.5 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1</name>
+      <pose>-5.29539 -24.637 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1</name>
+      <pose>-1.05081 -24.7885 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1</name>
+      <pose>3.17574 -24.9159 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1</name>
+      <pose>7.42292 -25.0468 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1</name>
+      <pose>-3.02919 2.05314 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_1</name>
+      <pose>0.973317 1.9592 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_2</name>
+      <pose>4.96634 1.87655 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_3</name>
+      <pose>8.93609 1.79246 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_0_1</name>
+      <pose>-5.06638 -3.24642 0 0 -0 1.57</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_4</name>
+      <pose>-3.12406 -5.16569 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_5</name>
+      <pose>-3.12406 -5.16569 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_6</name>
+      <pose>0.701864 -5.21387 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_6_1</name>
+      <pose>0.701864 -5.21387 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_6_1_1</name>
+      <pose>0.701864 -5.21387 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_6_1_2</name>
+      <pose>4.63588 -5.31722 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_6_1_3</name>
+      <pose>8.33513 -5.41399 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_6_1_4</name>
+      <pose>12.2678 -5.51867 0 0 0 -0.022449</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_0_1_1</name>
+      <pose>14.1606 -3.52614 0 0 -0 1.57</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_0_1_2</name>
+      <pose>14.2158 -0.004134 0 0 -0 1.57</pose>
+    </include>
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Jersey Barrier</uri>
+      <name>barrier_2_1_1_1_1_1_3_1</name>
+      <pose>12.2135 1.7471 0 0 0 -0.022449</pose>
+    </include>
+  </world>
+</sdf>
