@@ -26,7 +26,7 @@ from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJ
 ARGUMENTS = [
     DeclareLaunchArgument('rviz', default_value='false',
                           choices=['true', 'false'], description='Start rviz.'),
-    DeclareLaunchArgument('world', default_value='rectangle_obst',
+    DeclareLaunchArgument('world', default_value='warehouse',
                           description='Gazebo World'),
     DeclareLaunchArgument('setup_path',
                           default_value=[EnvironmentVariable('HOME'), '/clearpath/'],
