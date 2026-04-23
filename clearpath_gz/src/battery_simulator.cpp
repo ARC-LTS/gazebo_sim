@@ -1,6 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/battery_state.hpp>
 #include <nav_msgs/msg/odometry.hpp>
+#include <std_srvs/srv/trigger.hpp>
 #include <mutex>
 #include <cmath>
 
@@ -30,8 +31,24 @@ public:
         // Internal state: track charge in Amp-hours
         current_charge_ah_ = current_percentage_ * capacity_ah_;
 
+        initial_percentage_ = this->get_parameter("initial_percentage").as_double();
+
         battery_pub_ = this->create_publisher<sensor_msgs::msg::BatteryState>(battery_topic, 10);
-        
+
+        reset_service_ = this->create_service<std_srvs::srv::Trigger>(
+            "~/reset",
+            [this](const std::shared_ptr<std_srvs::srv::Trigger::Request>,
+                   std::shared_ptr<std_srvs::srv::Trigger::Response> response) {
+                std::lock_guard<std::mutex> lock(mutex_);
+                current_charge_ah_ = initial_percentage_ * capacity_ah_;
+                current_percentage_ = initial_percentage_;
+                first_odom_ = true;
+                last_update_time_ = this->now();
+                response->success = true;
+                response->message = "Battery reset to " + std::to_string(static_cast<int>(initial_percentage_ * 100)) + "%";
+                RCLCPP_INFO(this->get_logger(), "Battery reset to %.0f%%", initial_percentage_ * 100.0);
+            });
+
         odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
             odom_topic, 10, std::bind(&BatterySimulator::odomCallback, this, std::placeholders::_1));
 
@@ -107,7 +124,9 @@ private:
     rclcpp::Publisher<sensor_msgs::msg::BatteryState>::SharedPtr battery_pub_;
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
     rclcpp::TimerBase::SharedPtr timer_;
+    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr reset_service_;
 
+    double initial_percentage_;
     double current_percentage_;
     double current_charge_ah_;
     double nominal_voltage_;

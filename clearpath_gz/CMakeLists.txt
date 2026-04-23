@@ -11,6 +11,7 @@ find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 
 add_executable(battery_simulator src/battery_simulator.cpp)
 ament_target_dependencies(battery_simulator
@@ -18,6 +19,7 @@ ament_target_dependencies(battery_simulator
   sensor_msgs
   nav_msgs
   std_msgs
+  std_srvs
 )
 
 install(
