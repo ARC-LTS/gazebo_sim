@@ -38,6 +38,9 @@ ARGUMENTS = [
                       default_value='false',
                       choices=['true', 'false'],
                       description='Generate parameters and launch files'),
+    DeclareLaunchArgument('headless', default_value='false',
+                          choices=['true', 'false'],
+                          description='Run Gazebo server-only, without the GUI process.'),
 ]
 
 for pose_element in ['x', 'y', 'yaw']:
@@ -64,7 +67,8 @@ def generate_launch_description():
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([gz_sim_launch]),
         launch_arguments=[
-            ('world', LaunchConfiguration('world'))
+            ('world', LaunchConfiguration('world')),
+            ('headless', LaunchConfiguration('headless'))
         ]
     )
 
