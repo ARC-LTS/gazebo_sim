@@ -27,14 +27,34 @@ colcon build --symlink-install
 
 ### Setup path
 
+`setup_path` is the Clearpath setup directory holding `robot.yaml` and the generated
+platform/sensor/manipulator launch files and URDF. It resolves, in order: an explicit
+`setup_path:=` launch argument, the `RAMONES_SETUP_PATH` environment variable, then
+`~/clearpath/`.
+
+**RaMonES (this fork):** `simulation.launch.py` defaults to `generate:=false` and uses the
+generated files already in `setup_path`. The dissertation campaign ran on a frozen
+config generated on 2026-02-03 (notably `enable_ekf: false`, so RTAB-Map ICP odometry is
+the only `odom -> base_link` publisher, and the VLP16 simulated at 10 Hz). The
+`ramones_ws` meta-repo ships that config; point `RAMONES_SETUP_PATH` at it rather than
+regenerating. Regenerating with a different `clearpath_generator_common` release changes
+both settings and visibly corrupts the SLAM map when the robot spins.
+
+If the generated files are missing with `generate:=false`, the launch stops with an
+error naming them. With `generate:=true`, the generators overwrite the files in
+`setup_path`, and the launch stops if any generator exits non-zero.
+
+For a plain upstream setup:
+
 ```
 mkdir ~/clearpath
 ```
 
-Copy your `robot.yaml` into `~/clearpath`
+Copy your `robot.yaml` into `~/clearpath` and launch once with `generate:=true`.
 
 ## Launch
 
 ```
-ros2 launch clearpath_gz simulation.launch.py
+RAMONES_SETUP_PATH=/path/to/ramones_ws/config/clearpath/ \
+  ros2 launch clearpath_gz simulation.launch.py
 ```
