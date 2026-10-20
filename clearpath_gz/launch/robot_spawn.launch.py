@@ -22,7 +22,8 @@ from launch.actions import (
     GroupAction,
     IncludeLaunchDescription,
     RegisterEventHandler,
-    OpaqueFunction
+    OpaqueFunction,
+    Shutdown
 )
 from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
@@ -39,6 +40,52 @@ from launch_ros.substitutions import FindPackageShare
 import os
 
 
+# Files the robot spawn group includes from setup_path. They are produced by
+# the Clearpath generators (generate:=true) or must already exist there, as in
+# the frozen RaMonES campaign configuration (generate:=false).
+REQUIRED_GENERATED_FILES = [
+    os.path.join('platform', 'launch', 'platform-service.launch.py'),
+    os.path.join('sensors', 'launch', 'sensors-service.launch.py'),
+    os.path.join('manipulators', 'launch', 'manipulators-service.launch.py'),
+]
+
+
+def default_setup_path():
+    return EnvironmentVariable(
+        'RAMONES_SETUP_PATH', default_value=os.path.expanduser('~/clearpath/'))
+
+
+def check_setup_path(setup_path, generate):
+    robot_yaml = os.path.join(setup_path, 'robot.yaml')
+    if not os.path.isfile(robot_yaml):
+        raise RuntimeError(
+            f'No robot.yaml in Clearpath setup path {setup_path!r}. Set RAMONES_SETUP_PATH '
+            '(or pass setup_path:=) to the campaign config, e.g. ramones_ws/config/clearpath '
+            'as rendered by setup.sh.')
+    if generate:
+        return
+    missing = [f for f in REQUIRED_GENERATED_FILES
+               if not os.path.isfile(os.path.join(setup_path, f))]
+    if missing:
+        raise RuntimeError(
+            f'No generated Clearpath config at {setup_path!r} (missing: {", ".join(missing)}). '
+            'Point RAMONES_SETUP_PATH at the campaign config (ramones_ws/config/clearpath, '
+            'rendered by setup.sh), or pass generate:=true to generate it. Note that '
+            'generate:=true overwrites the generated files in setup_path.')
+
+
+def continue_if_succeeded(step, next_actions):
+    # OnProcessExit fires on any exit; stop the launch if a generator failed
+    # instead of going on to include files it never wrote.
+    def on_exit(event, context):
+        if event.returncode != 0:
+            return [Shutdown(
+                reason=f'Clearpath generator {step!r} failed with exit code '
+                       f'{event.returncode}; not spawning the robot.')]
+        return next_actions
+    return on_exit
+
+
 ARGUMENTS = [
     DeclareLaunchArgument('rviz', default_value='false',
                           choices=['true', 'false'],
@@ -49,8 +96,9 @@ ARGUMENTS = [
     DeclareLaunchArgument('world', default_value='warehouse_barricaded',
                           description='Gazebo World'),
     DeclareLaunchArgument('setup_path',
-                          default_value=[EnvironmentVariable('HOME'), '/clearpath/'],
-                          description='Clearpath setup path'),
+                          default_value=default_setup_path(),
+                          description='Clearpath setup path (default: $RAMONES_SETUP_PATH, '
+                                      'else ~/clearpath/)'),
     DeclareLaunchArgument('generate',
                           default_value='true',
                           choices=['true', 'false'],
@@ -72,6 +120,9 @@ def launch_setup(context, *args, **kwargs):
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
     generate = LaunchConfiguration('generate')
+
+    check_setup_path(setup_path.perform(context),
+                     generate.perform(context).lower() == 'true')
 
     # Parse robot YAML into config
     clearpath_config = ClearpathConfig(os.path.join(
@@ -168,28 +219,28 @@ def launch_setup(context, *args, **kwargs):
     event_generate_description = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=node_generate_description,
-            on_exit=[node_generate_semantic_description]
+            on_exit=continue_if_succeeded('generate_description', [node_generate_semantic_description])
         )
     )
 
     event_generate_semantic_description = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=node_generate_semantic_description,
-            on_exit=[node_generate_launch]
+            on_exit=continue_if_succeeded('generate_semantic_description', [node_generate_launch])
         )
     )
 
     event_generate_launch = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=node_generate_launch,
-            on_exit=[node_generate_param]
+            on_exit=continue_if_succeeded('generate_launch', [node_generate_param])
         )
     )
 
     event_generate_param = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=node_generate_param,
-            on_exit=[group_action_spawn_robot]
+            on_exit=continue_if_succeeded('generate_param', [group_action_spawn_robot])
         )
     )
 

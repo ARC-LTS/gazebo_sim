@@ -14,6 +14,8 @@
 #
 # @author Roni Kreinin (rkreinin@clearpathrobotics.com)
 
+import os
+
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
@@ -29,8 +31,11 @@ ARGUMENTS = [
     DeclareLaunchArgument('world', default_value='warehouse_barricaded',
                           description='Gazebo World'),
     DeclareLaunchArgument('setup_path',
-                          default_value=[EnvironmentVariable('HOME'), '/clearpath/'],
-                          description='Clearpath setup path'),
+                          default_value=EnvironmentVariable(
+                              'RAMONES_SETUP_PATH',
+                              default_value=os.path.expanduser('~/clearpath/')),
+                          description='Clearpath setup path (default: $RAMONES_SETUP_PATH, '
+                                      'else ~/clearpath/)'),
     DeclareLaunchArgument('use_sim_time', default_value='true',
                           choices=['true', 'false'],
                           description='use_sim_time'),
